@@ -68,7 +68,6 @@ public class Test1 : MonoBehaviour
             anime.SetFloat("speed",0);
         }
         if(Input.GetKeyDown(KeyCode.Space)&&this.jumpCount<2){
-            Debug.Log(jumpCount);
             //animationを追加
             anime.SetTrigger("jump");
             GetComponent<AudioSource>().Play();
@@ -91,6 +90,19 @@ public class Test1 : MonoBehaviour
             //プレイヤー自身のtransformを触れた床のtransformに合わせるために触れた床を親にしてる
             transform.SetParent(other.transform);
         }
+
+        if (other.gameObject.tag=="Enemy")
+        {
+           //Debug.Log("aaaaaaaaaa!:");
+           Destroy(other.gameObject);
+  //playerのhpへらす
+           hp-=10;
+           //hpの値がvalueに直接入るようにしてるから、バーの位置も変わる
+           slider.value=hp;
+           Debug.Log("変更後:"+hp);
+        
+        }
+
     }
 
     void OnCollisionExit2D(Collision2D col) {
@@ -105,19 +117,23 @@ public class Test1 : MonoBehaviour
     //対象の2つが両方コライダーがついてて、1つ以上リジッドボディがついている必要がある
      private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("変更前:"+hp);
+        
         //サクランボがプレイヤーに触れたら
         if (other.gameObject.CompareTag("Item"))
         {
            hp+=10;
            //hpの値がvalueに直接入るようにしてるから、バーの位置も変わる
            slider.value=hp;
-           Debug.Log("変更後:"+hp);
         }
+
+
     }
 
 
-
-
-
 }
+
+
+
+
+
+
