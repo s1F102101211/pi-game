@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class enemy : MonoBehaviour
 {
+    public GameObject dog1Prefab;
     private Animator anime;
     float speed=3.0f;
     private Rigidbody2D rbody2D;
