@@ -19,6 +19,7 @@ public class Test1 : MonoBehaviour
     public float speed=3.0f;
 
     private Animator anime;
+    public List <GameObject> itemList;
 
 
     void Start()
@@ -93,13 +94,23 @@ public class Test1 : MonoBehaviour
 
         if (other.gameObject.tag=="Enemy")
         {
-           //Debug.Log("aaaaaaaaaa!:");
-           Destroy(other.gameObject);
-  //playerのhpへらす
-           hp-=10;
-           //hpの値がvalueに直接入るようにしてるから、バーの位置も変わる
-           slider.value=hp;
-           Debug.Log("変更後:"+hp);
+            if(transform.position.y + 50.5f > other.transform.position.y){
+                rbody2D.AddForce(Vector2.up*5,ForceMode2D.Impulse);
+                //x=Random.Range(0,5);
+                //配列の0番目
+                //Quaternion.identityで回転しない
+                Instantiate(itemList[0],new Vector3(other.transform.position.x,other.transform.position.y,0),Quaternion.identity);
+                Destroy(other.gameObject);
+            }
+            else{
+                //playerのhpへらす
+                hp-=10;
+                //hpの値がvalueに直接入るようにしてるから、バーの位置も変わる
+                slider.value=hp;
+                Debug.Log("変更後:"+hp);
+            }
+
+
         
         }
 
