@@ -21,6 +21,8 @@ public class Test1 : MonoBehaviour
     private Animator anime;
     public List <GameObject> itemList;
 
+    [SerializeField] private GameObject Goaltext;
+    [SerializeField] private GameObject Gameovertext;
 
     void Start()
     {
@@ -32,11 +34,13 @@ public class Test1 : MonoBehaviour
 
         slider.value=hp;
         
-
+        Goaltext.SetActive(false);
+        Gameovertext.SetActive(false);
 
     //Test1がアタッチ(スクリプトなどのコンポーネントをつけること)しているオブジェクトにアタッチされているコンポーネントを見つけて取得する
     //Rigidbody2Dをつかっていろいろ操作をするためにgetしてる
       rbody2D = GetComponent<Rigidbody2D>();
+
     }
 
     // Update is called once per frame
@@ -75,6 +79,11 @@ public class Test1 : MonoBehaviour
           this.rbody2D.AddForce(transform.up * jumpForce);
           jumpCount++;
         }
+        if (transform.position.y < -10)
+        {
+            Gameovertext.SetActive(true);
+            transform.position = new Vector3(0, 0, 0);
+        }
         
     }
     //関数の定義は関数の中でできないからupdateのそとでかく
@@ -92,27 +101,30 @@ public class Test1 : MonoBehaviour
             transform.SetParent(other.transform);
         }
 
-        if (other.gameObject.tag=="Enemy")
+        foreach (ContactPoint2D contact in other.contacts)
         {
-            if(transform.position.y + 50.5f > other.transform.position.y){
-                rbody2D.AddForce(Vector2.up*5,ForceMode2D.Impulse);
-                //x=Random.Range(0,5);
-                //配列の0番目
-                //Quaternion.identityで回転しない
-                Instantiate(itemList[0],new Vector3(other.transform.position.x,other.transform.position.y,0),Quaternion.identity);
-                Destroy(other.gameObject);
-            }
-            else{
-                //playerのhpへらす
-                hp-=10;
-                //hpの値がvalueに直接入るようにしてるから、バーの位置も変わる
-                slider.value=hp;
-                Debug.Log("変更後:"+hp);
+            if (other.gameObject.tag=="Enemy")
+            {
+                if (contact.normal.y > 0.5){
+                    rbody2D.AddForce(Vector2.up*5,ForceMode2D.Impulse);
+                    //x=Random.Range(0,5);
+                    //配列の0番目
+                    //Quaternion.identityで回転しない
+                    Instantiate(itemList[0],new Vector3(other.transform.position.x,other.transform.position.y,0),Quaternion.identity);
+                    Destroy(other.gameObject);
+                }
+                else{
+                    //playerのhpへらす
+                    hp-=10;
+                    //hpの値がvalueに直接入るようにしてるから、バーの位置も変わる
+                    slider.value=hp;
+                    Debug.Log("変更後:"+hp);
+                }
             }
 
-
+           }
         
-        }
+        
 
     }
 
@@ -126,7 +138,7 @@ public class Test1 : MonoBehaviour
     //関数の定義は関数の中でできないからupdateのそとでかく
     //toriggerに触れた時にだけ反応する関数
     //対象の2つが両方コライダーがついてて、1つ以上リジッドボディがついている必要がある
-     private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         
         //サクランボがプレイヤーに触れたら
@@ -136,13 +148,15 @@ public class Test1 : MonoBehaviour
            //hpの値がvalueに直接入るようにしてるから、バーの位置も変わる
            slider.value=hp;
         }
-
+        if (other.gameObject.CompareTag("Goal")) // ゴールタグとの衝突を検出
+        {
+            Goaltext.SetActive(true);
+        }
 
     }
-
+    
 
 }
-
 
 
 
