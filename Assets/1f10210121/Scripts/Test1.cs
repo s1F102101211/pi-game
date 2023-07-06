@@ -110,6 +110,7 @@ public class Test1 : MonoBehaviour
                     //x=Random.Range(0,5);
                     //”z—ñ‚Ì0”Ô–Ú
                     //Quaternion.identity‚Å‰ñ“]‚µ‚È‚¢
+                
                     Instantiate(itemList[0],new Vector3(other.transform.position.x,other.transform.position.y,0),Quaternion.identity);
                     Destroy(other.gameObject);
                 }
